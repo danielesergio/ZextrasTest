@@ -2,11 +2,14 @@ package com.danielesergio.zextrastest.client
 
 import com.danielesergio.zextrastest.model.datasource.DataSource
 import com.danielesergio.zextrastest.model.post.Post
+import okhttp3.Cache
+import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Query
+import java.io.File
 
 
 interface PostService: DataSource {
@@ -20,14 +23,26 @@ interface PostService: DataSource {
         private const val POSTS_PAT:String = "/posts"
         private const val BASE_URL:String = "https://jsonplaceholder.typicode.com/"
 
+        private const val CACHE_SIZE = (10 * 1024 * 1024).toLong()
+
         private var instance: PostService? = null
 
-        fun getInstance():PostService{
+        //cacheDir is used only for the first initialization
+        fun getInstance(cacheDir: File):PostService{
             if(instance == null){
+                val cache = Cache(File(cacheDir, "http_cache"), CACHE_SIZE)
+
+
+                val client: OkHttpClient = OkHttpClient.Builder()
+                    .cache(cache)
+                    .addInterceptor(CacheInterceptor())
+                    .build()
 
                 val retrofit = Retrofit.Builder()
                     .baseUrl(BASE_URL)
+                    .client(client)
                     .build()
+
 
                 instance = retrofit.create(PostService::class.java)
             }
