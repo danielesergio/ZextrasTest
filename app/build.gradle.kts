@@ -44,6 +44,7 @@ dependencies {
     implementation(libs.retorift)
     implementation(libs.retrofit.converter)
     implementation(libs.kotlin.serialization)
+    runtimeOnly(libs.kotlin.serialization)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

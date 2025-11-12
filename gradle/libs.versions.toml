@@ -9,6 +9,7 @@ appcompat = "1.6.1"
 material = "1.10.0"
 retrofit = "3.0.0"
 kotlin-serialization = "1.9.0"
+kotlin-coroutines = "1.10.2"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -21,6 +22,7 @@ material = { group = "com.google.android.material", name = "material", version.r
 retorift = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit"}
 retrofit-converter = { group = "com.squareup.retrofit2", name = "converter-kotlinx-serialization", version.ref = "retrofit"}
 kotlin-serialization = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlin-serialization"}
+kotlin-coroutine = {group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlin-coroutines"  }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
