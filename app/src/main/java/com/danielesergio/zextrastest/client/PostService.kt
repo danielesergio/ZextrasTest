@@ -2,9 +2,13 @@ package com.danielesergio.zextrastest.client
 
 import com.danielesergio.zextrastest.model.datasource.DataSource
 import com.danielesergio.zextrastest.model.post.Post
+import com.danielesergio.zextrastest.model.post.PostImp
+import kotlinx.serialization.json.Json
 import okhttp3.Cache
+import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
+import retrofit2.converter.kotlinx.serialization.asConverterFactory
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
@@ -14,10 +18,10 @@ import java.io.File
 
 interface PostService: DataSource {
     @GET(POSTS_PAT)
-    override suspend fun getPosts(@Query("_page")page: Int?): List<Post>
+    override suspend fun getPosts(@Query("_page")page: Int?): List<PostImp>
 
     @POST(POSTS_PAT)
-    override suspend fun createPost(@Body newPost: Post): Post
+    override suspend fun createPost(@Body newPost: Post): PostImp
 
     companion object{
         private const val POSTS_PAT:String = "/posts"
@@ -32,7 +36,6 @@ interface PostService: DataSource {
             if(instance == null){
                 val cache = Cache(File(cacheDir, "http_cache"), CACHE_SIZE)
 
-
                 val client: OkHttpClient = OkHttpClient.Builder()
                     .cache(cache)
                     .addInterceptor(CacheInterceptor())
@@ -40,6 +43,7 @@ interface PostService: DataSource {
 
                 val retrofit = Retrofit.Builder()
                     .baseUrl(BASE_URL)
+                    .addConverterFactory(Json.asConverterFactory("application/json".toMediaType()))
                     .client(client)
                     .build()
 
