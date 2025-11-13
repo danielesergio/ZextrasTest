@@ -3,4 +3,16 @@
     <string name="storing_error">Storing Error</string>
     <string name="error_empty_field_message">This field cannot be empty</string>
     <string name="error_sync">Can\'t sync</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="view_post_fragment_label">Posts</string>
+    <string name="second_fragment_label">Add Post</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+    <string name="create_post_title">Titolo</string>
+    <string name="create_post_title_field_description">Campo titolo</string>
+    <string name="create_post_body">Body</string>
+    <string name="create_post_body_field_description">Campo body</string>
+    <string name="label_button_add_new_post">Aggiungi</string>
+    <string name="label_button_cancel">Cancella</string>
+    <string name="navigate_to_the_create_post_activity">Navigate to the create post activity</string>
 </resources>

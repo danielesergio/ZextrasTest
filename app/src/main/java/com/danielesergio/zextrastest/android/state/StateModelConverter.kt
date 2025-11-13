@@ -7,10 +7,7 @@ import com.danielesergio.zextrastest.model.post.PostImp
 
 //Model to UI state
 fun Post.toPostState(): PostState = PostState(id!!, title, body)
-fun List<Post>.toPostsState(): PostMasterDetailsState = PostMasterDetailsState(
-    posts = map { it.toPostState() },
-    isPending = false
-)
+fun List<Post>.toPostsState(): List<PostState> = map { it.toPostState() }
 
 //UI state to Model
 fun PostFormState.toPost(userId:Long): Post = PostImp(title = title, body = body, userId = userId)

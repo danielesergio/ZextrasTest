@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/ViewPostFragment">
+
+    <fragment
+        android:id="@+id/ViewPostFragment"
+        android:name="com.danielesergio.zextrastest.android.ui.ViewPostsFragment"
+        android:label="@string/view_post_fragment_label"
+        tools:layout="@layout/fragment_view_posts">
+
+        <action
+            android:id="@+id/action_ViewFragment_to_CreatePostFragment"
+            app:destination="@id/CreatePostFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/CreatePostFragment"
+        android:name="com.danielesergio.zextrastest.android.ui.CreatePostFragment"
+        android:label="@string/second_fragment_label"
+        tools:layout="@layout/fragment_create_post">
+
+        <action
+            android:id="@+id/action_CreatePostFragment_to_ViewPostsFragment"
+            app:destination="@id/ViewPostFragment" />
+    </fragment>
+</navigation>

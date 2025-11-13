@@ -33,6 +33,11 @@ android {
     kotlinOptions {
         jvmTarget = "11"
     }
+    buildFeatures {
+        viewBinding = true
+    }
+
+
 }
 
 dependencies {
@@ -46,6 +51,9 @@ dependencies {
     implementation(libs.kotlin.serialization)
     implementation(libs.androidx.paging.common.ktx)
     implementation(libs.androidx.paging.runtime.ktx)
+    implementation(libs.androidx.constraintlayout)
+    implementation(libs.androidx.navigation.fragment.ktx)
+    implementation(libs.androidx.navigation.ui.ktx)
     runtimeOnly(libs.kotlin.serialization)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
