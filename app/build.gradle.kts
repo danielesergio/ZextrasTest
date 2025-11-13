@@ -44,6 +44,8 @@ dependencies {
     implementation(libs.retorift)
     implementation(libs.retrofit.converter)
     implementation(libs.kotlin.serialization)
+    implementation(libs.androidx.paging.common.ktx)
+    implementation(libs.androidx.paging.runtime.ktx)
     runtimeOnly(libs.kotlin.serialization)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
