@@ -1,7 +1,7 @@
 package com.danielesergio.zextrastest.android
 
 import com.danielesergio.zextrastest.client.PostService
-import com.danielesergio.zextrastest.model.datasource.CombinedDataSource
+import com.danielesergio.zextrastest.model.datasource.LayeredDataSource
 import com.danielesergio.zextrastest.model.datasource.DataSource
 import com.danielesergio.zextrastest.model.datasource.DelegateDataSource
 import com.danielesergio.zextrastest.model.datasource.FileDataSource
@@ -13,9 +13,9 @@ object Factory {
     var dir: File? = null
 
     val dataSource: DataSource by lazy {
-        CombinedDataSource(
-            mainDataSource = DelegateDataSource(PostService.getInstance(dir!!)),
-            secondaryDataSource = FileDataSource.getInstance(dir!!)
+        LayeredDataSource(
+            immutableDataSource = DelegateDataSource(PostService.getInstance(dir!!)),
+            patchedDataSource = FileDataSource.getInstance(dir!!)
         )
     }
 
