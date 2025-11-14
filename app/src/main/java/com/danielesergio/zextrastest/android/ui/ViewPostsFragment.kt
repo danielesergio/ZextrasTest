@@ -5,20 +5,31 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.core.view.isVisible
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
+import androidx.paging.LoadState
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.danielesergio.zextrastest.R
+import com.danielesergio.zextrastest.android.PostsViewModel
 import com.danielesergio.zextrastest.databinding.FragmentViewPostsBinding
-import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
+import kotlin.getValue
 
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
  */
 class ViewPostsFragment : Fragment() {
 
+    private val viewModel: PostsViewModel  by activityViewModels()
     private var _binding: FragmentViewPostsBinding? = null
 
-    // This property is only valid between onCreateView and
-    // onDestroyView.
     private val binding get() = _binding!!
 
     override fun onCreateView(
@@ -36,13 +47,45 @@ class ViewPostsFragment : Fragment() {
 
         binding.createNewPostFab.setOnClickListener { view ->
             findNavController().navigate(R.id.action_ViewFragment_to_CreatePostFragment)
-
         }
+
+        val items = viewModel.items
+        val postAdapter = PostAdapter()
+
+        binding.bindAdapter(postAdapter = postAdapter)
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                items.collectLatest {
+                    postAdapter.submitData(it)
+                }
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                postAdapter.loadStateFlow.collect {
+                    binding.prependProgress.isVisible = it.source.prepend is LoadState.Loading
+                    binding.appendProgress.isVisible = it.source.append is LoadState.Loading
+                    if(it.source.append is LoadState.Error || it.source.prepend is LoadState.Error){
+                        Toast.makeText(context, "Error loading", Toast.LENGTH_LONG).show()
+                    }
+                }
+            }
+        }
+
 
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private fun FragmentViewPostsBinding.bindAdapter(postAdapter: PostAdapter) {
+        list.adapter = postAdapter
+        list.layoutManager = LinearLayoutManager(list.context)
+        val decoration = DividerItemDecoration(list.context, DividerItemDecoration.VERTICAL)
+        list.addItemDecoration(decoration)
     }
 }
