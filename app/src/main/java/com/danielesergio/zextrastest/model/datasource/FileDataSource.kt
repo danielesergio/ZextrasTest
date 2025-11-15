@@ -58,9 +58,11 @@ class FileDataSource(private val rootDir: File, private val postSerializer: Post
 
         }
     }
+
+    //FIXME a file with a correct name but with an unserializable content is count.
     override suspend fun getTotalPosts(): Long {
         return rootDir.listFiles { file ->
-            file.name.startsWith("POST_FILE_PREFIX") &&
+            file.name.startsWith(POST_FILE_PREFIX) &&
                     file.creationTime() != null
         }?.size?.toLong() ?: 0L
     }
