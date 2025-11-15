@@ -5,12 +5,6 @@ import com.danielesergio.zextrastest.model.post.Post
 import kotlinx.serialization.json.Json
 import java.io.File
 
-interface PostSerialization{
-    fun read(rawPost:String):Post
-    fun write(post:Post):String
-}
-
-
 class FileDataSource private constructor(val rootDir: File):DataSource{
 
     override suspend fun getPosts(page: Int?): List<Post> {
