@@ -7,5 +7,7 @@ interface DataSource {
                          responseSize: Int? = 10,
                          after:Long? =null):List<Post>
     suspend fun createPost(newPost: Post): Post
+
+    suspend fun getTotalPosts():Long
 }
 

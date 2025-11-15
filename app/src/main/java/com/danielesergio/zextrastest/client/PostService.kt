@@ -26,6 +26,8 @@ interface PostService: DataSource {
     @POST(POSTS_PATH)
     override suspend fun createPost(@Body newPost: Post): PostImp
 
+    override suspend fun getTotalPosts(): Long  = 100L
+
     companion object{
         private const val POSTS_PATH:String = "/posts"
         

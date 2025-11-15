@@ -54,6 +54,10 @@ class LayeredDataSource(val immutableDataSource: DataSource, val patchedDataSour
         }
     }
 
+    override suspend fun getTotalPosts(): Long {
+        return patchedDataSource.getTotalPosts() + immutableDataSource.getTotalPosts()
+    }
+
     //todo move PAGE_SIZE and TOTAL_ELEMENTS_MAIN_DATASOURCE -> update dataSource interface to return these data.
     companion object{
         private const val PAGE_SIZE:Int = 10

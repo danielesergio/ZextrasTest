@@ -35,6 +35,12 @@ class FileDataSource private constructor(val rootDir: File):DataSource{
         }
     }
 
+    override suspend fun getTotalPosts(): Long {
+        return rootDir.listFiles { file ->
+            file.name.startsWith("POST_FILE_PREFIX") &&
+                    file.creationTime() != null
+        }?.size?.toLong() ?: 0L
+    }
 
     companion object{
         private val map:MutableMap<String,FileDataSource> = mutableMapOf()
