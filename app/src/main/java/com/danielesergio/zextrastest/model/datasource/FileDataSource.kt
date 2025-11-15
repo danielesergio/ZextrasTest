@@ -37,14 +37,27 @@ class FileDataSource(private val rootDir: File, private val postSerializer: Post
     }
 
     override suspend fun createPost(newPost: Post): Post {
+        if(newPost.id == null){
+            throw IllegalArgumentException("Id can't be null")
+        }
         return newPost.also {
             val destinationFile = File(rootDir, postFileName())
-            destinationFile.writeText(postSerializer.postToString(newPost))
+            destinationFile.writeText(postSerializer.postToString(postWithFixedID(newPost)))
             LoggerImpl.i(TAG, "Saved $it")
             LoggerImpl.d(TAG, "Stored in file ${destinationFile.absolutePath}")
         }
     }
 
+    private  suspend fun postWithFixedID(p:Post):Post{
+        val idOffset = getTotalPosts()
+        return object:Post{
+            override val id:Long? = p.id!! + idOffset
+            override val userId: Long = p.userId
+            override val body: String = p.body
+            override val title: String = p.title
+
+        }
+    }
     override suspend fun getTotalPosts(): Long {
         return rootDir.listFiles { file ->
             file.name.startsWith("POST_FILE_PREFIX") &&
@@ -53,7 +66,6 @@ class FileDataSource(private val rootDir: File, private val postSerializer: Post
     }
 
     companion object{
-        private val map:MutableMap<String,FileDataSource> = mutableMapOf()
         private const val POST_FILE_PREFIX = "post_"
 
         private fun File.creationTime():Long? = runCatching {
