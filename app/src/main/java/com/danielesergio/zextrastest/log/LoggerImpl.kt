@@ -2,21 +2,22 @@ package com.danielesergio.zextrastest.log
 
 object LoggerImpl: Logger {
 
+    const val PREPEND_MESSAGE = "Log:"
     var delegate: Logger? = null
 
     override fun d(tag:String, message: String) {
-        delegate?.d(tag,message)
+        delegate?.d(tag,"$PREPEND_MESSAGE $message")
     }
 
     override fun i(tag:String,  message: String) {
-        delegate?.i(tag,message)
+        delegate?.i(tag,"$PREPEND_MESSAGE $message")
     }
 
     override fun w(tag:String,  message: String, throwable: Throwable?) {
-        delegate?.w(tag, message, throwable)
+        delegate?.w(tag, "$PREPEND_MESSAGE $message", throwable)
     }
 
     override fun e(tag:String, message: String, throwable: Throwable?) {
-        delegate?.e(tag, message, throwable)
+        delegate?.e(tag, "$PREPEND_MESSAGE $message", throwable)
     }
 }
