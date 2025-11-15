@@ -13,31 +13,37 @@ import kotlin.math.min
  */
 class LayeredDataSource(val immutableDataSource: DataSource, val patchedDataSource: DataSource): DataSource{
 
-    override suspend fun getPosts(page: Int?): List<Post> {
+    override suspend fun getPosts(page: Int?, after: Long?): List<Post> {
         val posts = immutableDataSource.getPosts(page)
-        LoggerImpl.d(TAG, "Obtained post from immutableDatasource, page $page, element in page ${posts.size}")
+        LoggerImpl.d(TAG, "Obtained post from immutableDatasource older than " +
+                "($after), page $page, element in page ${posts.size}")
         val mergedPosts = when{
-            page == null -> posts.plus(patchedDataSource.getPosts(page))
+            page == null -> posts.plus(patchedDataSource.getPosts(page, after))
             posts.size < PAGE_SIZE -> {
                 val patchedDataSourcePage =
                     (page * PAGE_SIZE - TOTAL_ELEMENTS_MAIN_DATASOURCE) / PAGE_SIZE
-                val othersPosts = patchedDataSource.getPosts(patchedDataSourcePage)
-                LoggerImpl.d(TAG, "Obtained post from patchedDataSource, page $patchedDataSourcePage, element in page ${othersPosts.size}")
+                val othersPosts = patchedDataSource.getPosts(patchedDataSourcePage, after)
+                LoggerImpl.d(TAG, "Obtained post from patchedDataSource older " +
+                        "than ($after), page $patchedDataSourcePage, element in page " +
+                        "${othersPosts.size}")
                 posts.plus(othersPosts).run {
                     this.subList(0, min(PAGE_SIZE, size))
                 }
             }
             else -> posts
         }
-        LoggerImpl.i(TAG, "Obtained post from LayeredDataSource, page $page, element in page ${mergedPosts.size}")
+        LoggerImpl.i(TAG, "Obtained post from LayeredDataSource,  older than " +
+                "($after) page $page, element in page ${mergedPosts.size}")
         return mergedPosts
     }
 
     override suspend fun createPost(newPost: Post): Post {
         return immutableDataSource.createPost(newPost).run {
-            LoggerImpl.d(TAG, "main data source successfully create the post $newPost")
+            LoggerImpl.d(TAG, "main data source successfully create the post " +
+                    "$newPost")
             patchedDataSource.createPost(this).also {
-                LoggerImpl.d(TAG, "second data source successfully create the post  c$newPost")
+                LoggerImpl.d(TAG, "second data source successfully create the post " +
+                        "$newPost")
             }
         }.also {
             LoggerImpl.d(TAG, "Created Post")

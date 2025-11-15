@@ -19,7 +19,7 @@ import java.io.File
 
 interface PostService: DataSource {
     @GET(DESC_POSTS_PATH)
-    override suspend fun getPosts(@Query("_page")page: Int?): List<PostImp>
+    override suspend fun getPosts(@Query("_page")page: Int?, @Query("_from")after: Long?): List<PostImp>
 
     @POST(POSTS_PATH)
     override suspend fun createPost(@Body newPost: Post): PostImp
