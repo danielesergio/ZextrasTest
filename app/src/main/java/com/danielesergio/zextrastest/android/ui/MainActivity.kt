@@ -1,9 +1,9 @@
 package com.danielesergio.zextrastest.android.ui
 
 import android.os.Bundle
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelStoreOwner
+import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.viewmodel.MutableCreationExtras
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -20,13 +20,18 @@ class MainActivity : AppCompatActivity() {
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
 
-    private var viewModel: PostsViewModel? = null
+    private val viewModel: PostsViewModel by viewModels { PostsViewModel.Factory }
+
+
+    override val defaultViewModelCreationExtras: CreationExtras
+        get() = MutableCreationExtras(super.defaultViewModelCreationExtras).apply {
+            this[PostsViewModel.POST_PAGING_SOURCE_KEY] = PostPagingSource(Factory.postRepository)
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         LoggerImpl.startEndMethod(TAG, "onCreate"){
             super.onCreate(savedInstanceState)
             Factory.dir = applicationContext.filesDir
-            viewModel = getViewModel()
             binding = ActivityMainBinding.inflate(layoutInflater)
             setContentView(binding.root)
             setSupportActionBar(binding.toolbar)
@@ -40,19 +45,6 @@ class MainActivity : AppCompatActivity() {
         val navController = findNavController(R.id.nav_host_fragment_content_main)
         return navController.navigateUp(appBarConfiguration)
                 || super.onSupportNavigateUp()
-    }
-
-    private fun getViewModel(): PostsViewModel{
-        val viewModelStoreOwner: ViewModelStoreOwner = this
-        val myViewModel: PostsViewModel = ViewModelProvider.create(
-            viewModelStoreOwner,
-            factory = PostsViewModel.Factory,
-            extras = MutableCreationExtras().apply {
-                set(PostsViewModel.MY_REPOSITORY_KEY, PostPagingSource(Factory.postRepository))
-            },
-        )[PostsViewModel::class]
-
-        return myViewModel
     }
 
     companion object{

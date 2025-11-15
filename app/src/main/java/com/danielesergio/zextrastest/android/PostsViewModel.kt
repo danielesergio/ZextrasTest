@@ -26,12 +26,12 @@ class PostsViewModel(
     companion object {
 
         // Define a custom key for your dependency
-        val MY_REPOSITORY_KEY = object : CreationExtras.Key<PostPagingSource> {}
+        val POST_PAGING_SOURCE_KEY = object : CreationExtras.Key<PostPagingSource> {}
 
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
                 // Get the dependency in your factory
-                val postPagingSource = this[MY_REPOSITORY_KEY] as PostPagingSource
+                val postPagingSource = this[POST_PAGING_SOURCE_KEY] as PostPagingSource
                 PostsViewModel {
                     postPagingSource
                 }

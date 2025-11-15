@@ -28,7 +28,9 @@ import kotlin.getValue
  */
 class ViewPostsFragment : Fragment() {
 
-    private val viewModel: PostsViewModel by activityViewModels()
+    private val viewModel: PostsViewModel by activityViewModels{
+        PostsViewModel.Factory
+    }
     private var _binding: FragmentViewPostsBinding? = null
 
     private val binding get() = _binding!!
