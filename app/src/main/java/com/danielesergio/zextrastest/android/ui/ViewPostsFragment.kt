@@ -69,7 +69,7 @@ class ViewPostsFragment : Fragment() {
                     postAdapter.loadStateFlow.collect {
                         binding.prependProgress.isVisible = it.source.prepend is LoadState.Loading
                         binding.appendProgress.isVisible = it.source.append is LoadState.Loading
-                        if(it.source.append is LoadState.Error || it.source.prepend is LoadState.Error){
+                        if(it.source.refresh is LoadState.Error ){
                             Toast.makeText(context, "Error loading", Toast.LENGTH_LONG).show()
                         }
                     }
