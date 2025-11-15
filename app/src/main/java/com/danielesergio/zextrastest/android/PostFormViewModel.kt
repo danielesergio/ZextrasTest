@@ -6,6 +6,7 @@ import com.danielesergio.zextrastest.R
 import com.danielesergio.zextrastest.android.state.PostFormState
 import com.danielesergio.zextrastest.android.state.toPost
 import com.danielesergio.zextrastest.android.state.toStringID
+import com.danielesergio.zextrastest.log.LoggerImpl
 import com.danielesergio.zextrastest.model.post.PostRepository
 import com.danielesergio.zextrastest.model.post.PostValidator
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -24,6 +25,7 @@ class PostFormViewModel(
     val uiState: StateFlow<PostFormState> = _uiState.asStateFlow()
 
     fun onTitleChanged(newTitle: String) {
+        LoggerImpl.d(TAG, "Title changed to $newTitle")
         _uiState.update { cs ->
             cs.copy(
                 title = newTitle,
@@ -33,6 +35,7 @@ class PostFormViewModel(
     }
 
     fun onBodyChanged(newBody: String) {
+        LoggerImpl.d(TAG, "Body changed to $newBody")
         _uiState.update { cs ->
             cs.copy(body = newBody)
         }
@@ -40,6 +43,7 @@ class PostFormViewModel(
 
 
     fun submit() {
+        LoggerImpl.d(TAG, "Submit new post")
         _uiState.update { cs ->
             cs.copy(isPending = true)
         }
@@ -47,11 +51,17 @@ class PostFormViewModel(
         viewModelScope.launch {
             postRepository.add(_uiState.value.toPost(1L))
                 .onFailure {
+                    LoggerImpl.i(TAG, "Submit new post fails")
                     _uiState.value = _uiState.value.copy(isPending = false, storingError = R.string.storing_error )
                 }
                 .onSuccess {
                     _uiState.value = PostFormState()
+                    LoggerImpl.i(TAG, "Post successfully submitted")
                 }
         }
+    }
+
+    companion object{
+        private val TAG = PostFormViewModel::class.java.simpleName
     }
 }

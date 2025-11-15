@@ -1,5 +1,6 @@
 package com.danielesergio.zextrastest.client
 
+import com.danielesergio.zextrastest.log.LoggerImpl
 import com.danielesergio.zextrastest.model.datasource.DataSource
 import com.danielesergio.zextrastest.model.post.Post
 import com.danielesergio.zextrastest.model.post.PostImp
@@ -31,6 +32,8 @@ interface PostService: DataSource {
 
         private var instance: PostService? = null
 
+        private val TAG = PostService::class.java.simpleName
+
         //cacheDir is used only for the first initialization
         fun getInstance(cacheDir: File):PostService{
             if(instance == null){
@@ -49,8 +52,10 @@ interface PostService: DataSource {
 
 
                 instance = retrofit.create(PostService::class.java)
-            }
 
+                LoggerImpl.d(TAG, "Create new PostService instance with cache ${cacheDir.absolutePath}")
+            }
+            LoggerImpl.i(TAG, "Get PostService instance")
             return instance!!
         }
 

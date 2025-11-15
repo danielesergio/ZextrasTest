@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.danielesergio.zextrastest.R
 import com.danielesergio.zextrastest.android.PostsViewModel
 import com.danielesergio.zextrastest.databinding.FragmentViewPostsBinding
+import com.danielesergio.zextrastest.log.LoggerImpl
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlin.getValue
@@ -27,7 +28,7 @@ import kotlin.getValue
  */
 class ViewPostsFragment : Fragment() {
 
-    private val viewModel: PostsViewModel  by activityViewModels()
+    private val viewModel: PostsViewModel by activityViewModels()
     private var _binding: FragmentViewPostsBinding? = null
 
     private val binding get() = _binding!!
@@ -35,49 +36,47 @@ class ViewPostsFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View {
-
+    ): View = LoggerImpl.startEndMethod(TAG, "onCreateView"){
         _binding = FragmentViewPostsBinding.inflate(inflater, container, false)
-        return binding.root
-
+        binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?): Unit =
+        LoggerImpl.startEndMethod(TAG, "onViewCreated"){
+            super.onViewCreated(view, savedInstanceState)
 
-        binding.createNewPostFab.setOnClickListener { view ->
-            findNavController().navigate(R.id.action_ViewFragment_to_CreatePostFragment)
-        }
-
-        val items = viewModel.items
-        val postAdapter = PostAdapter()
-
-        binding.bindAdapter(postAdapter = postAdapter)
-
-        viewLifecycleOwner.lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                items.collectLatest {
-                    postAdapter.submitData(it)
-                }
+            binding.createNewPostFab.setOnClickListener { view ->
+                findNavController().navigate(R.id.action_ViewFragment_to_CreatePostFragment)
             }
-        }
 
-        viewLifecycleOwner.lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                postAdapter.loadStateFlow.collect {
-                    binding.prependProgress.isVisible = it.source.prepend is LoadState.Loading
-                    binding.appendProgress.isVisible = it.source.append is LoadState.Loading
-                    if(it.source.append is LoadState.Error || it.source.prepend is LoadState.Error){
-                        Toast.makeText(context, "Error loading", Toast.LENGTH_LONG).show()
+            val items = viewModel.items
+            val postAdapter = PostAdapter()
+
+            binding.bindAdapter(postAdapter = postAdapter)
+
+            viewLifecycleOwner.lifecycleScope.launch {
+                repeatOnLifecycle(Lifecycle.State.STARTED) {
+                    items.collectLatest {
+                        postAdapter.submitData(it)
                     }
                 }
             }
+
+            viewLifecycleOwner.lifecycleScope.launch {
+                repeatOnLifecycle(Lifecycle.State.STARTED) {
+                    postAdapter.loadStateFlow.collect {
+                        binding.prependProgress.isVisible = it.source.prepend is LoadState.Loading
+                        binding.appendProgress.isVisible = it.source.append is LoadState.Loading
+                        if(it.source.append is LoadState.Error || it.source.prepend is LoadState.Error){
+                            Toast.makeText(context, "Error loading", Toast.LENGTH_LONG).show()
+                        }
+                    }
+                }
+            }
+
         }
 
-
-    }
-
-    override fun onDestroyView() {
+    override fun onDestroyView():Unit = LoggerImpl.startEndMethod(TAG, "onDestroyView"){
         super.onDestroyView()
         _binding = null
     }
@@ -87,5 +86,9 @@ class ViewPostsFragment : Fragment() {
         list.layoutManager = LinearLayoutManager(list.context)
         val decoration = DividerItemDecoration(list.context, DividerItemDecoration.VERTICAL)
         list.addItemDecoration(decoration)
+    }
+
+    companion object{
+        private val TAG = ViewPostsFragment::class.java.simpleName
     }
 }

@@ -1,7 +1,6 @@
 package com.danielesergio.zextrastest.android.ui
 
 import android.os.Bundle
-import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
@@ -14,6 +13,7 @@ import com.danielesergio.zextrastest.R
 import com.danielesergio.zextrastest.android.Factory
 import com.danielesergio.zextrastest.android.PostsViewModel
 import com.danielesergio.zextrastest.databinding.ActivityMainBinding
+import com.danielesergio.zextrastest.log.LoggerImpl
 
 class MainActivity : AppCompatActivity() {
 
@@ -23,19 +23,17 @@ class MainActivity : AppCompatActivity() {
     private var viewModel: PostsViewModel? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        Factory.dir = applicationContext.filesDir
-        viewModel = getViewModel()
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
-        setSupportActionBar(binding.toolbar)
-
-        val navController = findNavController(R.id.nav_host_fragment_content_main)
-        appBarConfiguration = AppBarConfiguration(navController.graph)
-        setupActionBarWithNavController(navController, appBarConfiguration)
-
-
+        LoggerImpl.startEndMethod(TAG, "onCreate"){
+            super.onCreate(savedInstanceState)
+            Factory.dir = applicationContext.filesDir
+            viewModel = getViewModel()
+            binding = ActivityMainBinding.inflate(layoutInflater)
+            setContentView(binding.root)
+            setSupportActionBar(binding.toolbar)
+            val navController = findNavController(R.id.nav_host_fragment_content_main)
+            appBarConfiguration = AppBarConfiguration(navController.graph)
+            setupActionBarWithNavController(navController, appBarConfiguration)
+        }
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -55,5 +53,9 @@ class MainActivity : AppCompatActivity() {
         )[PostsViewModel::class]
 
         return myViewModel
+    }
+
+    companion object{
+        private val TAG = MainActivity::class.java.simpleName
     }
 }

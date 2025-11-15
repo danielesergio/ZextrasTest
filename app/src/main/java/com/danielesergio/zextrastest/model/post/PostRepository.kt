@@ -1,15 +1,28 @@
 package com.danielesergio.zextrastest.model.post
 
+import com.danielesergio.zextrastest.log.LoggerImpl
 import com.danielesergio.zextrastest.model.datasource.DataSource
 
 class PostRepository(private val dataSource: DataSource){
 
     suspend fun get(page:Int?): Result<List<Post>>{
-        return runCatching { dataSource.getPosts(page) }
+        return runCatching {
+            dataSource.getPosts(page)
+        }.onFailure {
+            LoggerImpl.w(TAG, "Exception obtaining posts", it)
+        }
     }
 
     suspend fun add(post: Post): Result<Post>{
-        return runCatching { dataSource.createPost(post) }
+        return runCatching {
+            dataSource.createPost(post)
+        }.onFailure {
+            LoggerImpl.w(TAG, "Exception adding $post", it)
+        }
+    }
+
+    companion object{
+        private val TAG = PostRepository::class.java.simpleName
     }
 
 }

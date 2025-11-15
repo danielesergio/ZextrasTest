@@ -3,6 +3,7 @@ import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.danielesergio.zextrastest.android.state.PostState
 import com.danielesergio.zextrastest.android.state.toPostsState
+import com.danielesergio.zextrastest.log.LoggerImpl
 import com.danielesergio.zextrastest.model.post.PostRepository
 
 private const val STARTING_KEY = 1
@@ -10,6 +11,7 @@ private const val STARTING_KEY = 1
 class PostPagingSource(private val postRepository: PostRepository) : PagingSource<Int, PostState>() {
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, PostState> {
+        LoggerImpl.i(TAG, "Loading new post page $params")
         val startKey = params.key ?: STARTING_KEY
         return postRepository.get(startKey)
             .map { posts -> LoadResult.Page(
@@ -17,10 +19,16 @@ class PostPagingSource(private val postRepository: PostRepository) : PagingSourc
                     prevKey = when (startKey) {
                         STARTING_KEY -> null
                         else -> startKey -1 },
-                    nextKey = startKey + 1
+                    nextKey = if(posts.size <10){
+                        null
+                    } else {
+                        startKey+1
+                    }
                 )
             }.getOrElse {
-                t -> LoadResult.Error(t)
+                t ->
+                LoggerImpl.w(TAG, "Loading new post page error", t)
+                LoadResult.Error(t)
             }
 
 
@@ -32,6 +40,10 @@ class PostPagingSource(private val postRepository: PostRepository) : PagingSourc
             state.closestPageToPosition(it)?.prevKey?.plus(1)
                 ?: state.closestPageToPosition(it)?.nextKey?.minus(1)
         }
+    }
+
+    companion object{
+        private val TAG = PostPagingSource::class.java.simpleName
     }
 
 }

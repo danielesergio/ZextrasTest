@@ -20,4 +20,11 @@ object LoggerImpl: Logger {
     override fun e(tag:String, message: String, throwable: Throwable?) {
         delegate?.e(tag, "$PREPEND_MESSAGE $message", throwable)
     }
+
+    fun <T>startEndMethod(tag: String, methodName:String, action: () -> T): T{
+        d(tag, "$methodName start")
+        return action().also {
+            d(tag, "$methodName end")
+        }
+    }
 }
