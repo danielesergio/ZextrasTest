@@ -17,16 +17,15 @@ import retrofit2.http.Query
 import java.io.File
 
 
-interface PostService: DataSource {
+interface PostService {
     @GET(DESC_POSTS_PATH)
-    override suspend fun getPosts(@Query("_page") page: Int?,
-                                  @Query("_limit") responseSize: Int?,
-                                  @Query("_from") after: Long?): List<PostImp>
+    suspend fun getPosts(@Query("_page") page: Int?,
+                                  @Query("_limit") responseSize: Int?): List<PostImp>
 
     @POST(POSTS_PATH)
-    override suspend fun createPost(@Body newPost: Post): PostImp
+    suspend fun createPost(@Body newPost: Post): PostImp
 
-    override suspend fun getTotalPosts(): Long  = 100L
+    suspend fun getTotalPosts(): Long  = TOTAL_POSTS
 
     companion object{
         private const val POSTS_PATH:String = "/posts"
@@ -37,9 +36,12 @@ interface PostService: DataSource {
 
         private const val CACHE_SIZE = (10 * 1024 * 1024).toLong()
 
+        private const val TOTAL_POSTS = 100L
+
         private var instance: PostService? = null
 
         private val TAG = PostService::class.java.simpleName
+
 
         //cacheDir is used only for the first initialization
         fun getInstance(cacheDir: File):PostService{

@@ -1,10 +1,10 @@
 package com.danielesergio.zextrastest.android
 
 import com.danielesergio.zextrastest.client.PostService
+import com.danielesergio.zextrastest.client.RemoteDataSource
 import com.danielesergio.zextrastest.log.LoggerImpl
 import com.danielesergio.zextrastest.model.datasource.LayeredDataSource
 import com.danielesergio.zextrastest.model.datasource.DataSource
-import com.danielesergio.zextrastest.model.datasource.DelegateDataSource
 import com.danielesergio.zextrastest.model.datasource.FileDataSource
 import com.danielesergio.zextrastest.model.post.PostRepository
 import java.io.File
@@ -19,7 +19,7 @@ object Factory {
     val dataSource: DataSource by lazy {
         LoggerImpl.d(TAG, "create data source")
         LayeredDataSource(
-            immutableDataSource = DelegateDataSource(PostService.getInstance(dir!!)),
+            immutableDataSource = RemoteDataSource(PostService.getInstance(dir!!)),
             patchedDataSource = FileDataSource.getInstance(dir!!)
         )
     }
