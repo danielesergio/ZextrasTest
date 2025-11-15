@@ -13,27 +13,31 @@ import kotlin.math.min
  */
 class LayeredDataSource(val immutableDataSource: DataSource, val patchedDataSource: DataSource): DataSource{
 
-    override suspend fun getPosts(page: Int?, after: Long?): List<Post> {
+    override suspend fun getPosts(page: Int?, responseSize: Int?, after: Long?): List<Post> {
         val posts = immutableDataSource.getPosts(page)
         LoggerImpl.d(TAG, "Obtained post from immutableDatasource older than " +
-                "($after), page $page, element in page ${posts.size}")
+                "$after, page $page, page max size $responseSize, element in page ${posts.size}")
+
         val mergedPosts = when{
-            page == null -> posts.plus(patchedDataSource.getPosts(page, after))
+
+            page == null -> posts.plus(patchedDataSource.getPosts(page, responseSize,after))
+
             posts.size < PAGE_SIZE -> {
                 val patchedDataSourcePage =
                     (page * PAGE_SIZE - TOTAL_ELEMENTS_MAIN_DATASOURCE) / PAGE_SIZE
-                val othersPosts = patchedDataSource.getPosts(patchedDataSourcePage, after)
+                val othersPosts = patchedDataSource.getPosts(patchedDataSourcePage, responseSize, after)
                 LoggerImpl.d(TAG, "Obtained post from patchedDataSource older " +
-                        "than ($after), page $patchedDataSourcePage, element in page " +
-                        "${othersPosts.size}")
+                        "than ($after), page $patchedDataSourcePage, , page max size $responseSize " +
+                        "element in page ${othersPosts.size}")
                 posts.plus(othersPosts).run {
                     this.subList(0, min(PAGE_SIZE, size))
                 }
             }
+
             else -> posts
         }
         LoggerImpl.i(TAG, "Obtained post from LayeredDataSource,  older than " +
-                "($after) page $page, element in page ${mergedPosts.size}")
+                "$after page $page, page max size $responseSize, element in page ${mergedPosts.size}")
         return mergedPosts
     }
 
@@ -42,11 +46,11 @@ class LayeredDataSource(val immutableDataSource: DataSource, val patchedDataSour
             LoggerImpl.d(TAG, "main data source successfully create the post " +
                     "$newPost")
             patchedDataSource.createPost(this).also {
-                LoggerImpl.d(TAG, "second data source successfully create the post " +
-                        "$newPost")
+                LoggerImpl.d(TAG, "second data source successfully create the " +
+                        "post $newPost")
             }
         }.also {
-            LoggerImpl.d(TAG, "Created Post")
+            LoggerImpl.i(TAG, "Created Post")
         }
     }
 

@@ -7,14 +7,16 @@ import java.io.File
 
 class FileDataSource private constructor(val rootDir: File):DataSource{
 
-    override suspend fun getPosts(page: Int?, after: Long?): List<Post> {
+    override suspend fun getPosts(page: Int?, responseSize: Int?, after: Long?): List<Post> {
         val posts = rootDir.listFiles{ file ->
             val creationTime = file.creationTime()
 
             file.name.startsWith("POST_FILE_PREFIX") &&
                     creationTime != null &&
                     (after == null || creationTime < after)
-        }?.mapNotNull { file ->
+        }?.sortedByDescending {
+            it.name
+        }?.take(responseSize?:Int.MAX_VALUE)?.mapNotNull { file ->
             runCatching {
                     Json.decodeFromString<Post>(file.readText())
             }.getOrNull()
