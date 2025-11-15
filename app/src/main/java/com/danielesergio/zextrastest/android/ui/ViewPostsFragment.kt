@@ -19,6 +19,7 @@ import com.danielesergio.zextrastest.R
 import com.danielesergio.zextrastest.android.PostsViewModel
 import com.danielesergio.zextrastest.databinding.FragmentViewPostsBinding
 import com.danielesergio.zextrastest.log.LoggerImpl
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlin.getValue
@@ -70,8 +71,11 @@ class ViewPostsFragment : Fragment() {
                         binding.prependProgress.isVisible = it.source.prepend is LoadState.Loading
                         binding.appendProgress.isVisible = it.source.append is LoadState.Loading
                         if(it.source.refresh is LoadState.Error ){
-                            Toast.makeText(context, "Error loading", Toast.LENGTH_LONG).show()
-                        }
+                            Snackbar.make(requireView(), "Connection error", Snackbar.LENGTH_INDEFINITE)
+                                .setAction("Retry") {
+                                    postAdapter.retry()
+                                }
+                                .show()                        }
                     }
                 }
             }
