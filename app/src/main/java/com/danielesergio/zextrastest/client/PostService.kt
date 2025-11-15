@@ -18,14 +18,17 @@ import java.io.File
 
 
 interface PostService: DataSource {
-    @GET(POSTS_PAT)
+    @GET(DESC_POSTS_PATH)
     override suspend fun getPosts(@Query("_page")page: Int?): List<PostImp>
 
-    @POST(POSTS_PAT)
+    @POST(POSTS_PATH)
     override suspend fun createPost(@Body newPost: Post): PostImp
 
     companion object{
-        private const val POSTS_PAT:String = "/posts"
+        private const val POSTS_PATH:String = "/posts"
+        
+        private const val DESC_POSTS_PATH:String = "$POSTS_PATH?_order=desc"
+
         private const val BASE_URL:String = "https://jsonplaceholder.typicode.com/"
 
         private const val CACHE_SIZE = (10 * 1024 * 1024).toLong()
