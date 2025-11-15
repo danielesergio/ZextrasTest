@@ -68,9 +68,11 @@ class ViewPostsFragment : Fragment() {
             viewLifecycleOwner.lifecycleScope.launch {
                 repeatOnLifecycle(Lifecycle.State.STARTED) {
                     postAdapter.loadStateFlow.collect {
+                        binding.createNewPostFab.isVisible = true
                         binding.prependProgress.isVisible = it.source.prepend is LoadState.Loading
                         binding.appendProgress.isVisible = it.source.append is LoadState.Loading
                         if(it.source.refresh is LoadState.Error ){
+                            binding.createNewPostFab.isVisible = false
                             Snackbar.make(requireView(), "Connection error", Snackbar.LENGTH_INDEFINITE)
                                 .setAction("Retry") {
                                     postAdapter.retry()
