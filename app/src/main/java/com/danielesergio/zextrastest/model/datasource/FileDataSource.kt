@@ -2,23 +2,33 @@ package com.danielesergio.zextrastest.model.datasource
 
 import com.danielesergio.zextrastest.log.LoggerImpl
 import com.danielesergio.zextrastest.model.post.Post
-import kotlinx.serialization.json.Json
+import com.danielesergio.zextrastest.model.post.PostSerializer
 import java.io.File
 
-class FileDataSource private constructor(val rootDir: File):DataSource{
+class FileDataSource(private val rootDir: File, private val postSerializer: PostSerializer):DataSource{
 
     override suspend fun getPosts(page: Int?, responseSize: Int?, after: Long?): List<Post> {
+        val drop = if(page == null || responseSize == null){
+            0
+        } else {
+            (page - 1) * responseSize
+        }
         val posts = rootDir.listFiles{ file ->
             val creationTime = file.creationTime()
 
-            file.name.startsWith("POST_FILE_PREFIX") &&
+            file.name.startsWith(POST_FILE_PREFIX) &&
                     creationTime != null &&
-                    (after == null || creationTime < after)
-        }?.sortedByDescending {
+                    (after == null || creationTime <= after)
+        }
+            ?.sortedByDescending {
             it.name
-        }?.take(responseSize?:Int.MAX_VALUE)?.mapNotNull { file ->
+        }?.drop(drop)?.take(responseSize?:Int.MAX_VALUE)?.mapNotNull { file ->
             runCatching {
-                    Json.decodeFromString<Post>(file.readText())
+                LoggerImpl.d(TAG, "Deserializing post ${file.name}")
+                postSerializer.stringToPost(file.readText())
+            }.onFailure {
+                LoggerImpl.w(TAG, "Can't deserialize post stored in ${file.absolutePath}", it)
+                LoggerImpl.w(TAG, "File content ${file.readText()}")
             }.getOrNull()
         }?: emptyList()
 
@@ -29,7 +39,7 @@ class FileDataSource private constructor(val rootDir: File):DataSource{
     override suspend fun createPost(newPost: Post): Post {
         return newPost.also {
             val destinationFile = File(rootDir, postFileName())
-            destinationFile.writeText(Json.encodeToString(it))
+            destinationFile.writeText(postSerializer.postToString(newPost))
             LoggerImpl.i(TAG, "Saved $it")
             LoggerImpl.d(TAG, "Stored in file ${destinationFile.absolutePath}")
         }
@@ -54,13 +64,6 @@ class FileDataSource private constructor(val rootDir: File):DataSource{
         private fun postFileName() = "$POST_FILE_PREFIX${System.currentTimeMillis()}"
 
         private val TAG = FileDataSource::class.java.simpleName
-        fun getInstance(file: File):FileDataSource{
-            return map.getOrElse(file.absolutePath){
-                LoggerImpl.d(TAG, "Create new FileDataSource (${file.absolutePath})")
-                FileDataSource(file).also { map[file.absolutePath] = it }
-            }.also {
-                LoggerImpl.i(TAG, "Get FileDataSource")
-            }
-        }
+
     }
 }

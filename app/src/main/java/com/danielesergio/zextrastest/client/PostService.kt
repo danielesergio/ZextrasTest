@@ -23,7 +23,7 @@ interface PostService {
                                   @Query("_limit") responseSize: Int?): List<PostImp>
 
     @POST(POSTS_PATH)
-    suspend fun createPost(@Body newPost: Post): PostImp
+    suspend fun createPost(@Body newPost: PostImp): PostImp
 
     suspend fun getTotalPosts(): Long  = TOTAL_POSTS
 
