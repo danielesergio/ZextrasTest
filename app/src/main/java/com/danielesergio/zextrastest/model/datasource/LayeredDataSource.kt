@@ -46,10 +46,10 @@ class LayeredDataSource(val immutableDataSource: DataSource, val patchedDataSour
     override suspend fun createPost(newPost: Post): Post {
         return immutableDataSource.createPost(newPost).run {
             LoggerImpl.d(TAG, "main data source successfully create the post " +
-                    "$newPost")
+                    "$this")
             patchedDataSource.createPost(this).also {
                 LoggerImpl.d(TAG, "second data source successfully create the " +
-                        "post $newPost")
+                        "post $it")
             }
         }.also {
             LoggerImpl.i(TAG, "Created Post")
@@ -74,10 +74,10 @@ class LayeredDataSource(val immutableDataSource: DataSource, val patchedDataSour
         val firstPage = ceil(firstElementToShow.toDouble() / responseSize).toInt()
         val secondPage = ceil(lastElementToShow.toDouble() / responseSize).toInt()
         LoggerImpl.d(TAG, "Post to merge from immutableDataSource [$firstElementToShow, $lastElementToShow]")
-        LoggerImpl.d(TAG, "Page first element: $firstPage")
-        LoggerImpl.d(TAG, "Page last element: $secondPage")
+        LoggerImpl.d(TAG, "Page first element($firstElementToShow): $firstPage")
+        LoggerImpl.d(TAG, "Page last element($lastElementToShow): $secondPage")
         val posts = immutableDataSource.getPosts(firstPage, responseSize, after)
-            .drop(firstElementToShow.toInt() % responseSize - 1)
+            .drop(((firstElementToShow-1)%responseSize).toInt())
         return if(firstPage != secondPage) {
             posts + immutableDataSource.getPosts(secondPage, responseSize, after)
         } else {
