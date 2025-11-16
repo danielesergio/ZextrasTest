@@ -33,7 +33,7 @@ object Factory {
     val dataSource: DataSource by lazy {
         LoggerImpl.d(TAG, "create data source")
         LayeredDataSource(
-            immutableDataSource = RemoteDataSource(PostService.getInstance(dir!!)),
+            immutableDataSource = RemoteDataSource(PostService.getInstance()),
             patchedDataSource = FileDataSource(dir!!, postSerializer)
         )
     }
