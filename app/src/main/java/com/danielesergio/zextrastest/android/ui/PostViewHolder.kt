@@ -1,5 +1,6 @@
 package com.danielesergio.zextrastest.android.ui
 
+import android.annotation.SuppressLint
 import androidx.recyclerview.widget.RecyclerView
 import com.danielesergio.zextrastest.android.state.PostState
 import com.danielesergio.zextrastest.databinding.PostViewHolderLayoutBinding
@@ -12,9 +13,10 @@ class PostViewHolder(
     private val binding: PostViewHolderLayoutBinding
 ) : RecyclerView.ViewHolder(binding.root) {
 
+    @SuppressLint("SetTextI18n")
     fun bind(post: PostState) {
         binding.apply {
-            binding.title.text = post.title
+            binding.title.text = "${post.id} ${post.title}"
             binding.description.text = post.body
         }
     }
