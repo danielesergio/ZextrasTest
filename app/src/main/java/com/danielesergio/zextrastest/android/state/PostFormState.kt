@@ -8,5 +8,5 @@ data class PostFormState(
     val storingError: Int? = null
 ){
     val isFormValid: Boolean = titleError == null
-    val submitButtonEnabled: Boolean = isFormValid
+    val submitButtonEnabled: Boolean = isFormValid && !isPending
 }
