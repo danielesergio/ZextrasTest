@@ -1,16 +1,16 @@
 package com.danielesergio.zextrastest.android
 
 import com.danielesergio.zextrastest.client.PostService
-import com.danielesergio.zextrastest.client.RemoteDataSource
+import com.danielesergio.zextrastest.datasource.RemoteDataSource
 import com.danielesergio.zextrastest.log.LoggerImpl
-import com.danielesergio.zextrastest.model.datasource.LayeredDataSource
-import com.danielesergio.zextrastest.model.datasource.DataSource
-import com.danielesergio.zextrastest.model.datasource.FileDataSource
-import com.danielesergio.zextrastest.model.post.Post
-import com.danielesergio.zextrastest.model.post.PostImp
-import com.danielesergio.zextrastest.model.post.PostImp.Companion.toPostImpl
-import com.danielesergio.zextrastest.model.post.PostRepository
-import com.danielesergio.zextrastest.model.post.PostSerializer
+import com.danielesergio.zextrastest.datasource.LayeredDataSource
+import com.danielesergio.zextrastest.domain.post.DataSource
+import com.danielesergio.zextrastest.datasource.FileDataSource
+import com.danielesergio.zextrastest.domain.post.Post
+import com.danielesergio.zextrastest.domain.post.PostImp
+import com.danielesergio.zextrastest.domain.post.PostImp.Companion.toPostImpl
+import com.danielesergio.zextrastest.domain.post.PostRepository
+import com.danielesergio.zextrastest.domain.post.PostSerializer
 import kotlinx.serialization.json.Json
 import java.io.File
 import kotlin.properties.Delegates

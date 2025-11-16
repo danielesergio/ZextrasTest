@@ -1,6 +1,8 @@
-package com.danielesergio.zextrastest.model.datasource
+package com.danielesergio.zextrastest.domain.datasource
 
-import com.danielesergio.zextrastest.model.post.PostImp
+import com.danielesergio.zextrastest.datasource.LayeredDataSource
+import com.danielesergio.zextrastest.domain.post.DataSource
+import com.danielesergio.zextrastest.domain.post.PostImp
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.launch

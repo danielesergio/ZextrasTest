@@ -1,7 +1,8 @@
-package com.danielesergio.zextrastest.model.datasource
+package com.danielesergio.zextrastest.datasource
 
+import com.danielesergio.zextrastest.domain.post.DataSource
 import com.danielesergio.zextrastest.log.LoggerImpl
-import com.danielesergio.zextrastest.model.post.Post
+import com.danielesergio.zextrastest.domain.post.Post
 import kotlin.math.ceil
 import kotlin.math.max
 
@@ -12,7 +13,8 @@ import kotlin.math.max
  *
  * @property patchedDataSource the datasource that contained the new posts.
  */
-class LayeredDataSource(val immutableDataSource: DataSource, val patchedDataSource: DataSource): DataSource{
+class LayeredDataSource(val immutableDataSource: DataSource, val patchedDataSource: DataSource):
+    DataSource {
 
     override suspend fun getPosts(page: Int?, responseSize: Int?, before: Long?): List<Post> {
         //todo skip this method call if the patchedDatasource.getTotalPosts is less than the page*responseSize

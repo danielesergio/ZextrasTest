@@ -1,6 +1,6 @@
-package com.danielesergio.zextrastest.model.post
+package com.danielesergio.zextrastest.domain.post
 
-import com.danielesergio.zextrastest.model.ValidationResult
+import com.danielesergio.zextrastest.domain.ValidationResult
 
 object PostValidator{
     fun validateTitle(title:String?): ValidationResult {

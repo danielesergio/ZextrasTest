@@ -1,9 +1,9 @@
 package com.danielesergio.zextrastest.android.state
 
 import com.danielesergio.zextrastest.R
-import com.danielesergio.zextrastest.model.ValidationResult
-import com.danielesergio.zextrastest.model.post.Post
-import com.danielesergio.zextrastest.model.post.PostImp
+import com.danielesergio.zextrastest.domain.ValidationResult
+import com.danielesergio.zextrastest.domain.post.Post
+import com.danielesergio.zextrastest.domain.post.PostImp
 
 //Model to UI state
 fun Post.toPostState(): PostState = PostState(id!!, title, body)

@@ -11,8 +11,8 @@ import com.danielesergio.zextrastest.android.state.toPost
 import com.danielesergio.zextrastest.android.state.toStringID
 import com.danielesergio.zextrastest.android.ui.RepositoryCreationExtrasKey
 import com.danielesergio.zextrastest.log.LoggerImpl
-import com.danielesergio.zextrastest.model.post.PostRepository
-import com.danielesergio.zextrastest.model.post.PostValidator
+import com.danielesergio.zextrastest.domain.post.PostRepository
+import com.danielesergio.zextrastest.domain.post.PostValidator
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow

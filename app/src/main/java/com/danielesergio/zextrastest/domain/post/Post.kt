@@ -1,4 +1,4 @@
-package com.danielesergio.zextrastest.model.post
+package com.danielesergio.zextrastest.domain.post
 
 interface Post{
     val id:Long?

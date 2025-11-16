@@ -4,7 +4,7 @@ import androidx.paging.PagingState
 import com.danielesergio.zextrastest.android.state.PostState
 import com.danielesergio.zextrastest.android.state.toPostsState
 import com.danielesergio.zextrastest.log.LoggerImpl
-import com.danielesergio.zextrastest.model.post.PostRepository
+import com.danielesergio.zextrastest.domain.post.PostRepository
 
 private const val STARTING_KEY = 1
 

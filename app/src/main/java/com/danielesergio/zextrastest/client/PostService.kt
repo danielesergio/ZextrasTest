@@ -1,7 +1,7 @@
 package com.danielesergio.zextrastest.client
 
 import com.danielesergio.zextrastest.log.LoggerImpl
-import com.danielesergio.zextrastest.model.post.PostImp
+import com.danielesergio.zextrastest.domain.post.PostImp
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import retrofit2.Retrofit

@@ -12,7 +12,7 @@ import androidx.paging.cachedIn
 import com.danielesergio.zextrastest.android.state.PostState
 import com.danielesergio.zextrastest.android.ui.PostPagingSource
 import com.danielesergio.zextrastest.android.ui.RepositoryCreationExtrasKey
-import com.danielesergio.zextrastest.model.post.PostRepository
+import com.danielesergio.zextrastest.domain.post.PostRepository
 import kotlinx.coroutines.flow.Flow
 
 class PostsViewModel(

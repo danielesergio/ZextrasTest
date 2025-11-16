@@ -1,14 +1,16 @@
-package com.danielesergio.zextrastest.model.datasource
+package com.danielesergio.zextrastest.datasource
 
+import com.danielesergio.zextrastest.domain.post.DataSource
 import com.danielesergio.zextrastest.log.LoggerImpl
-import com.danielesergio.zextrastest.model.post.Post
-import com.danielesergio.zextrastest.model.post.PostSerializer
+import com.danielesergio.zextrastest.domain.post.Post
+import com.danielesergio.zextrastest.domain.post.PostSerializer
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
 
 //Todo replace FileDataSourceWithADB
-class FileDataSource(private val rootDir: File, private val postSerializer: PostSerializer):DataSource{
+class FileDataSource(private val rootDir: File, private val postSerializer: PostSerializer):
+    DataSource {
 
     override suspend fun getPosts(page: Int?, responseSize: Int?, before: Long?): List<Post> =
         withContext(Dispatchers.IO){

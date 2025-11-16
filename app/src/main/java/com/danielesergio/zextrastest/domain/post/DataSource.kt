@@ -1,6 +1,4 @@
-package com.danielesergio.zextrastest.model.datasource
-
-import com.danielesergio.zextrastest.model.post.Post
+package com.danielesergio.zextrastest.domain.post
 
 interface DataSource {
     suspend fun getPosts(page: Int?,
@@ -10,4 +8,3 @@ interface DataSource {
 
     suspend fun getTotalPosts():Long
 }
-
