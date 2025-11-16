@@ -3,7 +3,6 @@ package com.danielesergio.zextrastest.android
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.danielesergio.zextrastest.R
@@ -64,9 +63,12 @@ class PostFormViewModel(
                     _uiState.value = _uiState.value.copy(isPending = false, storingError = R.string.storing_error )
                 }
                 .onSuccess {
-                    _uiState.value = PostFormState()
+                    _uiState.value = initialState
+                    _postCreateEvent.value = true
                     LoggerImpl.i(TAG, "Post successfully submitted")
+                    _postCreateEvent.value = false
                 }
+
         }
     }
 
