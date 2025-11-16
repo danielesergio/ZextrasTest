@@ -15,20 +15,20 @@ import kotlin.math.max
 //todo add test cases
 class LayeredDataSource(val immutableDataSource: DataSource, val patchedDataSource: DataSource): DataSource{
 
-    override suspend fun getPosts(page: Int?, responseSize: Int?, after: Long?): List<Post> {
+    override suspend fun getPosts(page: Int?, responseSize: Int?, before: Long?): List<Post> {
         val posts = patchedDataSource.getPosts(page)
-        LoggerImpl.d(TAG,logMessage("patchedDataSource", page, responseSize, after) )
+        LoggerImpl.d(TAG,logMessage("patchedDataSource", page, responseSize, before) )
         LoggerImpl.d(TAG, logTotalPost(posts.size))
 
         val mergedPosts = when{
 
-            responseSize == null -> posts.plus(immutableDataSource.getPosts(page, responseSize,after))
+            responseSize == null -> posts.plus(immutableDataSource.getPosts(page, responseSize,before))
 
             posts.size < responseSize -> {
 
                 val othersPosts = getPostToMerge(page?:1,
                     responseSize,
-                    after,
+                    before,
                     patchedDataSource.getTotalPosts())
                     .take(responseSize - posts.size)
 
@@ -37,7 +37,7 @@ class LayeredDataSource(val immutableDataSource: DataSource, val patchedDataSour
 
             else -> posts
         }
-        LoggerImpl.i(TAG, logMessage("LayeredDataSource", page, responseSize, after))
+        LoggerImpl.i(TAG, logMessage("LayeredDataSource", page, responseSize, before))
         LoggerImpl.i(TAG, logTotalPost(mergedPosts.size) )
 
         return mergedPosts

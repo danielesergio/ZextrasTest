@@ -7,7 +7,7 @@ import java.io.File
 
 class FileDataSource(private val rootDir: File, private val postSerializer: PostSerializer):DataSource{
 
-    override suspend fun getPosts(page: Int?, responseSize: Int?, after: Long?): List<Post> {
+    override suspend fun getPosts(page: Int?, responseSize: Int?, before: Long?): List<Post> {
         val drop = if(page == null || responseSize == null){
             0
         } else {
@@ -18,7 +18,7 @@ class FileDataSource(private val rootDir: File, private val postSerializer: Post
 
             file.name.startsWith(POST_FILE_PREFIX) &&
                     creationTime != null &&
-                    (after == null || creationTime <= after)
+                    (before == null || creationTime < before)
         }
             ?.sortedByDescending {
             it.name

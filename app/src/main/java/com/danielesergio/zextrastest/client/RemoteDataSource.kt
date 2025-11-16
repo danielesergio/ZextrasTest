@@ -9,7 +9,7 @@ class RemoteDataSource(private val postService: PostService): DataSource {
     override suspend fun getPosts(
         page: Int?,
         responseSize: Int?,
-        after: Long?
+        before: Long?
     ): List<Post>  = postService.getPosts(page, responseSize)
 
     override suspend fun createPost(newPost: Post): Post = postService.createPost(newPost.toPostImpl())

@@ -5,7 +5,7 @@ import com.danielesergio.zextrastest.model.post.Post
 interface DataSource {
     suspend fun getPosts(page: Int?,
                          responseSize: Int? = 10,
-                         after:Long? =null):List<Post>
+                         before:Long? =null):List<Post>
     suspend fun createPost(newPost: Post): Post
 
     suspend fun getTotalPosts():Long
