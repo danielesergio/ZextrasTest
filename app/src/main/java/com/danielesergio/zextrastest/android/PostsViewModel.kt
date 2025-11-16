@@ -12,6 +12,8 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.danielesergio.zextrastest.android.state.PostState
 import com.danielesergio.zextrastest.android.ui.PostPagingSource
+import com.danielesergio.zextrastest.android.ui.RepositoryCreationExtrasKey
+import com.danielesergio.zextrastest.model.post.PostRepository
 import kotlinx.coroutines.flow.Flow
 
 class PostsViewModel(
@@ -25,15 +27,11 @@ class PostsViewModel(
 
     companion object {
 
-        // Define a custom key for your dependency
-        val POST_PAGING_SOURCE_KEY = object : CreationExtras.Key<PostPagingSource> {}
-
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
-                // Get the dependency in your factory
-                val postPagingSource = this[POST_PAGING_SOURCE_KEY] as PostPagingSource
+                val postRepository = this[RepositoryCreationExtrasKey] as PostRepository
                 PostsViewModel {
-                    postPagingSource
+                    PostPagingSource(postRepository)
                 }
             }
         }

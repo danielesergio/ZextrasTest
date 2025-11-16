@@ -11,7 +11,6 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import com.danielesergio.zextrastest.R
 import com.danielesergio.zextrastest.android.Factory
-import com.danielesergio.zextrastest.android.PostFormViewModel
 import com.danielesergio.zextrastest.android.PostsViewModel
 import com.danielesergio.zextrastest.databinding.ActivityMainBinding
 import com.danielesergio.zextrastest.log.LoggerImpl
@@ -26,9 +25,7 @@ class MainActivity : AppCompatActivity() {
 
     override val defaultViewModelCreationExtras: CreationExtras
         get() = MutableCreationExtras(super.defaultViewModelCreationExtras).apply {
-            this[PostsViewModel.POST_PAGING_SOURCE_KEY] = PostPagingSource(Factory.postRepository)
-            this[PostFormViewModel.POST_REPOSITORY_KEY] = Factory.postRepository
-
+            this[RepositoryCreationExtrasKey] = Factory.postRepository
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {

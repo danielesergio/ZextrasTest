@@ -1,11 +1,16 @@
 package com.danielesergio.zextrastest.android
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.CreationExtras
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
 import com.danielesergio.zextrastest.R
 import com.danielesergio.zextrastest.android.state.PostFormState
 import com.danielesergio.zextrastest.android.state.toPost
 import com.danielesergio.zextrastest.android.state.toStringID
+import com.danielesergio.zextrastest.android.ui.RepositoryCreationExtrasKey
 import com.danielesergio.zextrastest.log.LoggerImpl
 import com.danielesergio.zextrastest.model.post.PostRepository
 import com.danielesergio.zextrastest.model.post.PostValidator
@@ -16,12 +21,16 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class PostFormViewModel(
-    private val validator: PostValidator = PostValidator,
     private val postRepository: PostRepository
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(PostFormState())
+    private val initialState = PostFormState(title = "", titleError = PostValidator.validateTitle("").toStringID())
+    private val _uiState = MutableStateFlow(initialState)
     // Public immutable flow
+    private val _postCreateEvent = MutableStateFlow(false)
+
+    val postCreateEvent = _postCreateEvent.asStateFlow()
+
     val uiState: StateFlow<PostFormState> = _uiState.asStateFlow()
 
     fun onTitleChanged(newTitle: String) {
@@ -29,7 +38,7 @@ class PostFormViewModel(
         _uiState.update { cs ->
             cs.copy(
                 title = newTitle,
-                titleError = validator.validateTitle(newTitle).toStringID()
+                titleError = PostValidator.validateTitle(newTitle).toStringID()
             )
         }
     }
@@ -64,11 +73,9 @@ class PostFormViewModel(
     companion object{
         private val TAG = PostFormViewModel::class.java.simpleName
 
-        val POST_REPOSITORY_KEY = object : CreationExtras.Key<PostRepository> {}
-
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
-                val postRepository = this[POST_REPOSITORY_KEY] as PostRepository
+                val postRepository = this[RepositoryCreationExtrasKey] as PostRepository
                 PostFormViewModel(postRepository)
             }
         }
