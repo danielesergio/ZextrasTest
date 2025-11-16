@@ -12,10 +12,10 @@ import kotlin.math.max
  *
  * @property patchedDataSource the datasource that contained the new posts.
  */
-//todo add test cases
 class LayeredDataSource(val immutableDataSource: DataSource, val patchedDataSource: DataSource): DataSource{
 
     override suspend fun getPosts(page: Int?, responseSize: Int?, before: Long?): List<Post> {
+        //todo skip this method call if the patchedDatasource.getTotalPosts is less than the page*responseSize
         val posts = patchedDataSource.getPosts(page, responseSize, before)
         LoggerImpl.d(TAG,logMessage("patchedDataSource", page, responseSize, before) )
         LoggerImpl.d(TAG, logTotalPost(posts.size))
