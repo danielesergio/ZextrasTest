@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -13,7 +12,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.danielesergio.zextrastest.R
-import com.danielesergio.zextrastest.android.PostFormViewModel
+import com.danielesergio.zextrastest.android.viewmodel.PostFormViewModel
 import com.danielesergio.zextrastest.databinding.FragmentCreatePostBinding
 import com.danielesergio.zextrastest.log.LoggerImpl
 import com.google.android.material.snackbar.Snackbar

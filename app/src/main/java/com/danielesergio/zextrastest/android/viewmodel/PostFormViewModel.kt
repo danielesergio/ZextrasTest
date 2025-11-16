@@ -1,4 +1,4 @@
-package com.danielesergio.zextrastest.android
+package com.danielesergio.zextrastest.android.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider

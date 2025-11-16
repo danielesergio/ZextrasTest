@@ -5,7 +5,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
@@ -16,7 +15,7 @@ import androidx.paging.LoadState
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.danielesergio.zextrastest.R
-import com.danielesergio.zextrastest.android.PostsViewModel
+import com.danielesergio.zextrastest.android.viewmodel.PostsViewModel
 import com.danielesergio.zextrastest.databinding.FragmentViewPostsBinding
 import com.danielesergio.zextrastest.log.LoggerImpl
 import com.google.android.material.snackbar.Snackbar

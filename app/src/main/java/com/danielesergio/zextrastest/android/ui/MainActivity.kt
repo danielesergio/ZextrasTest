@@ -11,7 +11,7 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import com.danielesergio.zextrastest.R
 import com.danielesergio.zextrastest.android.Factory
-import com.danielesergio.zextrastest.android.PostsViewModel
+import com.danielesergio.zextrastest.android.viewmodel.PostsViewModel
 import com.danielesergio.zextrastest.databinding.ActivityMainBinding
 import com.danielesergio.zextrastest.log.LoggerImpl
 
