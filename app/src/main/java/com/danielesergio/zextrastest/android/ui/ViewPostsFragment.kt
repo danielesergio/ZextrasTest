@@ -67,22 +67,43 @@ class ViewPostsFragment : Fragment() {
 
             viewLifecycleOwner.lifecycleScope.launch {
                 repeatOnLifecycle(Lifecycle.State.STARTED) {
-                    postAdapter.loadStateFlow.collect {
+                    postAdapter.loadStateFlow.collect { state ->
                         binding.createNewPostFab.isVisible = true
-                        binding.prependProgress.isVisible = it.source.prepend is LoadState.Loading
-                        binding.appendProgress.isVisible = it.source.append is LoadState.Loading
-                        if(it.source.refresh is LoadState.Error ){
-                            binding.createNewPostFab.isVisible = false
-                            Snackbar.make(requireView(), "Connection error", Snackbar.LENGTH_INDEFINITE)
-                                .setAction("Retry") {
-                                    postAdapter.retry()
-                                }
-                                .show()                        }
+                        binding.prependProgress.isVisible = state.source.prepend is LoadState.Loading
+                        binding.appendProgress.isVisible = state.source.append is LoadState.Loading
+
+
+                        val wasRefreshing = binding.swipeRefresh.isRefreshing
+                        val isRefreshing =  state.refresh is LoadState.Loading
+
+                        binding.swipeRefresh.isRefreshing = isRefreshing
+                        if(wasRefreshing && !isRefreshing){
+                            binding.list.smoothScrollToPosition(0)
+                        }
                     }
                 }
             }
 
+            postAdapter.addLoadStateListener { loadState ->
+
+                if (loadState.hasError) {
+                    binding.createNewPostFab.isVisible = false
+
+                    snackbar = Snackbar.make(requireView(), "Connection error", Snackbar.LENGTH_INDEFINITE)
+                        .setAction("Retry") {
+                            postAdapter.retry()
+                        }.also { it.show() }
+                }
+            }
+
+            binding.swipeRefresh.setOnRefreshListener {
+                postAdapter.refresh()
+                snackbar?.dismiss()
+                snackbar = null
+            }
+
         }
+    private var snackbar: Snackbar? = null
 
     override fun onDestroyView():Unit = LoggerImpl.startEndMethod(TAG, "onDestroyView"){
         super.onDestroyView()
