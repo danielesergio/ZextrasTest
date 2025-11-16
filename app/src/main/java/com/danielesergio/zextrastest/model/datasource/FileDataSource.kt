@@ -3,44 +3,47 @@ package com.danielesergio.zextrastest.model.datasource
 import com.danielesergio.zextrastest.log.LoggerImpl
 import com.danielesergio.zextrastest.model.post.Post
 import com.danielesergio.zextrastest.model.post.PostSerializer
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.io.File
 
 class FileDataSource(private val rootDir: File, private val postSerializer: PostSerializer):DataSource{
 
-    override suspend fun getPosts(page: Int?, responseSize: Int?, before: Long?): List<Post> {
-        val drop = if(page == null || responseSize == null){
-            0
-        } else {
-            (page - 1) * responseSize
+    override suspend fun getPosts(page: Int?, responseSize: Int?, before: Long?): List<Post> =
+        withContext(Dispatchers.IO){
+            val drop = if(page == null || responseSize == null){
+                0
+            } else {
+                (page - 1) * responseSize
+            }
+            val posts = rootDir.listFiles{ file ->
+                val creationTime = file.creationTime()
+
+                file.name.startsWith(POST_FILE_PREFIX) &&
+                        creationTime != null &&
+                        (before == null || creationTime < before)
+            }
+                ?.sortedByDescending {
+                it.name
+            }?.drop(drop)?.take(responseSize?:Int.MAX_VALUE)?.mapNotNull { file ->
+                runCatching {
+                    LoggerImpl.d(TAG, "Deserializing post ${file.name}")
+                    postSerializer.stringToPost(file.readText())
+                }.onFailure {
+                    LoggerImpl.w(TAG, "Can't deserialize post stored in ${file.absolutePath}", it)
+                    LoggerImpl.w(TAG, "File content ${file.readText()}")
+                }.getOrNull()
+            }?: emptyList()
+
+            LoggerImpl.i(TAG, "Obtained ${posts.size} posts, page = $page")
+            posts
         }
-        val posts = rootDir.listFiles{ file ->
-            val creationTime = file.creationTime()
 
-            file.name.startsWith(POST_FILE_PREFIX) &&
-                    creationTime != null &&
-                    (before == null || creationTime < before)
-        }
-            ?.sortedByDescending {
-            it.name
-        }?.drop(drop)?.take(responseSize?:Int.MAX_VALUE)?.mapNotNull { file ->
-            runCatching {
-                LoggerImpl.d(TAG, "Deserializing post ${file.name}")
-                postSerializer.stringToPost(file.readText())
-            }.onFailure {
-                LoggerImpl.w(TAG, "Can't deserialize post stored in ${file.absolutePath}", it)
-                LoggerImpl.w(TAG, "File content ${file.readText()}")
-            }.getOrNull()
-        }?: emptyList()
-
-        LoggerImpl.i(TAG, "Obtained ${posts.size} posts, page = $page")
-        return posts
-    }
-
-    override suspend fun createPost(newPost: Post): Post {
+    override suspend fun createPost(newPost: Post): Post = withContext(Dispatchers.IO){
         if(newPost.id == null){
             throw IllegalArgumentException("Id can't be null")
         }
-        return newPost.also {
+        newPost.also {
             val destinationFile = File(rootDir, postFileName())
             destinationFile.writeText(postSerializer.postToString(postWithFixedID(newPost)))
             LoggerImpl.i(TAG, "Saved $it")
@@ -60,8 +63,8 @@ class FileDataSource(private val rootDir: File, private val postSerializer: Post
     }
 
     //FIXME a file with a correct name but with an unserializable content is count.
-    override suspend fun getTotalPosts(): Long {
-        return rootDir.listFiles { file ->
+    override suspend fun getTotalPosts(): Long = withContext(Dispatchers.IO){
+        rootDir.listFiles { file ->
             file.name.startsWith(POST_FILE_PREFIX) &&
                     file.creationTime() != null
         }?.size?.toLong() ?: 0L
