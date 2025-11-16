@@ -63,5 +63,14 @@ class PostFormViewModel(
 
     companion object{
         private val TAG = PostFormViewModel::class.java.simpleName
+
+        val POST_REPOSITORY_KEY = object : CreationExtras.Key<PostRepository> {}
+
+        val Factory: ViewModelProvider.Factory = viewModelFactory {
+            initializer {
+                val postRepository = this[POST_REPOSITORY_KEY] as PostRepository
+                PostFormViewModel(postRepository)
+            }
+        }
     }
 }
