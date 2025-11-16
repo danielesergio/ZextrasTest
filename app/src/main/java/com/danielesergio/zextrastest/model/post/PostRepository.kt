@@ -6,9 +6,9 @@ import com.danielesergio.zextrastest.model.datasource.DataSource
 
 class PostRepository(private val dataSource: DataSource){
 
-    suspend fun get(page:Int?): Result<List<Post>>{
+    suspend fun get(page:Int, pageSize:Int, before:Long): Result<List<Post>>{
         return runCatching {
-            dataSource.getPosts(page)
+            dataSource.getPosts(page, pageSize, before)
         }.onFailure {
             LoggerImpl.w(TAG, "Exception obtaining posts", it)
         }

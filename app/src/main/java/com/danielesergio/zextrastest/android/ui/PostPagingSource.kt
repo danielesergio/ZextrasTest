@@ -10,16 +10,18 @@ private const val STARTING_KEY = 1
 
 class PostPagingSource(private val postRepository: PostRepository) : PagingSource<Int, PostState>() {
 
+    private val before = System.currentTimeMillis()
+
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, PostState> {
         LoggerImpl.i(TAG, "Loading new post page $params")
         val startKey = params.key ?: STARTING_KEY
-        return postRepository.get(startKey)
+        return postRepository.get(startKey, params.loadSize, before)
             .map { posts -> LoadResult.Page(
                     data = posts.toPostsState(),
                     prevKey = when (startKey) {
                         STARTING_KEY -> null
                         else -> startKey -1 },
-                    nextKey = if(posts.size <10){
+                    nextKey = if(posts.size < params.loadSize){
                         null
                     } else {
                         startKey+1
