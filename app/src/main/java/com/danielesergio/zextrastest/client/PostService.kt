@@ -28,7 +28,7 @@ interface PostService {
         private const val DESC_POSTS_PATH:String = "$POSTS_PATH?_sort=id&_order=desc"
 
         private const val BASE_URL:String = "https://jsonplaceholder.typicode.com/"
-        
+
         private const val TOTAL_POSTS = 100L
 
         private var instance: PostService? = null

@@ -1,7 +1,6 @@
 package com.danielesergio.zextrastest.android.ui
 
 import android.os.Bundle
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.viewmodel.MutableCreationExtras
@@ -11,7 +10,6 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import com.danielesergio.zextrastest.R
 import com.danielesergio.zextrastest.android.Factory
-import com.danielesergio.zextrastest.android.viewmodel.PostsViewModel
 import com.danielesergio.zextrastest.databinding.ActivityMainBinding
 import com.danielesergio.zextrastest.log.LoggerImpl
 
@@ -19,8 +17,6 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
-
-    private val viewModel: PostsViewModel by viewModels { PostsViewModel.Factory }
 
 
     override val defaultViewModelCreationExtras: CreationExtras
