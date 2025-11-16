@@ -1,17 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/constraint_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingStart="16dp"
-    android:paddingEnd="16dp"
-    android:paddingBottom="16dp"
-    tools:context=".android.ui.CreatePostFragment">
+    tools:context=".android.ui.CreatePostFragment"
+    android:fitsSystemWindows="true">
 
-    <!-- Campo Titolo -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/error_input_layout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/error_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+    <View
+        android:id="@+id/loadingOverlayBackground"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="#66000000"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <ProgressBar
+        android:id="@+id/loadingSpinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/title_input_layout"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -19,42 +54,36 @@
         android:layout_height="wrap_content"
         android:hint="@string/create_post_title"
         app:endIconMode="clear_text"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/body_input_layout"
         app:layout_constraintEnd_toEndOf="parent"
-        app:boxCornerRadiusTopStart="@dimen/box_corner_radius"
-        app:boxCornerRadiusTopEnd="@dimen/box_corner_radius"
-        app:boxCornerRadiusBottomStart="@dimen/box_corner_radius"
-        app:boxCornerRadiusBottomEnd="@dimen/box_corner_radius"
-        android:layout_marginTop="24dp">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/error_input_layout"
+        app:layout_constraintVertical_bias="0.5"
+        app:layout_constraintVertical_chainStyle="packed">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/title_edit_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textCapSentences"
             android:contentDescription="@string/create_post_title_field_description"
-            android:imeOptions="actionNext"/>
+            android:imeOptions="actionNext"
+            android:inputType="textCapSentences" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
-    <!-- Campo Body: occupa tutto lo spazio rimanente -->
+
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/body_input_layout"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:hint="@string/create_post_body"
-        app:layout_constraintTop_toBottomOf="@id/title_input_layout"
-        app:layout_constraintBottom_toTopOf="@id/button_add"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/button_add"
         app:layout_constraintEnd_toEndOf="parent"
-        app:boxCornerRadiusTopStart="@dimen/box_corner_radius"
-        app:boxCornerRadiusTopEnd="@dimen/box_corner_radius"
-        app:boxCornerRadiusBottomStart="@dimen/box_corner_radius"
-        app:boxCornerRadiusBottomEnd="@dimen/box_corner_radius"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="16dp">
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/title_input_layout"
+        app:layout_constraintVertical_bias="0.5">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/edit_text_body"
@@ -62,25 +91,27 @@
             android:layout_height="match_parent"
             android:gravity="top|start"
             android:inputType="textMultiLine"
-            android:scrollbars="vertical"
+            android:maxLines="5"
+            android:minLines="5"
             android:overScrollMode="ifContentScrolls"
-            android:contentDescription="@string/create_post_body_field_description"
-            android:padding="8dp"/>
-
+            android:scrollbars="vertical" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <!-- Pulsanti in basso -->
+
     <com.google.android.material.button.MaterialButton
         android:id="@+id/button_add"
         style="@style/Widget.MaterialComponents.Button"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
         android:text="@string/label_button_add_new_post"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/button_cancel"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/button_cancel"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintHorizontal_weight="1"
-        android:layout_marginEnd="8dp"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/body_input_layout"
+        app:layout_constraintVertical_bias="0.5" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/button_cancel"
@@ -88,10 +119,10 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="@string/label_button_cancel"
-        app:layout_constraintStart_toEndOf="@id/button_add"
+        app:layout_constraintBottom_toBottomOf="@+id/button_add"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_weight="1"
-        android:layout_marginStart="8dp"/>
+        app:layout_constraintStart_toEndOf="@id/button_add"
+        app:layout_constraintTop_toTopOf="@+id/button_add" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
