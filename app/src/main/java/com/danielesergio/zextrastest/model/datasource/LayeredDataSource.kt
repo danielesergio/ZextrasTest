@@ -16,7 +16,7 @@ import kotlin.math.max
 class LayeredDataSource(val immutableDataSource: DataSource, val patchedDataSource: DataSource): DataSource{
 
     override suspend fun getPosts(page: Int?, responseSize: Int?, before: Long?): List<Post> {
-        val posts = patchedDataSource.getPosts(page)
+        val posts = patchedDataSource.getPosts(page, responseSize, before)
         LoggerImpl.d(TAG,logMessage("patchedDataSource", page, responseSize, before) )
         LoggerImpl.d(TAG, logTotalPost(posts.size))
 
