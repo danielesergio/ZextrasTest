@@ -35,6 +35,10 @@ class ViewPostsFragment : Fragment() {
 
     private val binding get() = _binding!!
 
+    private val postAdapter = PostAdapter()
+
+    private var snackbar: Snackbar? = null
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -52,7 +56,6 @@ class ViewPostsFragment : Fragment() {
             }
 
             val items = viewModel.items
-            val postAdapter = PostAdapter()
 
             binding.bindAdapter(postAdapter = postAdapter)
 
@@ -102,7 +105,11 @@ class ViewPostsFragment : Fragment() {
             }
 
         }
-    private var snackbar: Snackbar? = null
+
+    override fun onResume() {
+        super.onResume()
+        postAdapter.refresh()
+    }
 
     override fun onDestroyView():Unit = LoggerImpl.startEndMethod(TAG, "onDestroyView"){
         super.onDestroyView()
