@@ -45,7 +45,8 @@ class PostFormViewModel(
     fun onBodyChanged(newBody: String) {
         LoggerImpl.d(TAG, "Body changed to $newBody")
         _uiState.update { cs ->
-            cs.copy(body = newBody)
+            cs.copy(body = newBody,
+                bodyError = PostValidator.validateBody(newBody).toStringID())
         }
     }
 

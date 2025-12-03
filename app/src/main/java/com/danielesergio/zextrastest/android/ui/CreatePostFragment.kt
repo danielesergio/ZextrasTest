@@ -70,6 +70,7 @@ class CreatePostFragment : Fragment() {
                         binding.buttonAdd.isEnabled = state.submitButtonEnabled
 
                         binding.titleInputLayout.error = state.titleError?.run{resources.getString(this)} ?: ""
+                        binding.bodyInputLayout.error = state.bodyError?.run{resources.getString(this)} ?: ""
 
                         if(state.title.isEmpty() && state.body.isEmpty()){
                             binding.titleEditText.setText("")

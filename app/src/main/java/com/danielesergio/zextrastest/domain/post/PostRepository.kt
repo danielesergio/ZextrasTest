@@ -19,6 +19,9 @@ class PostRepository(private val dataSource: DataSource){
             if(PostValidator.validateTitle(post.title) == ValidationResult.INVALID_EMPTY_FIELD){
                 throw IllegalArgumentException("Title can't be empty")
             }
+            if(PostValidator.validateBody(post.body) == ValidationResult.INVALID_EMPTY_FIELD){
+                throw IllegalArgumentException("Body can't be empty")
+            }
             dataSource.createPost(post)
         }.onFailure {
             LoggerImpl.w(TAG, "Exception adding $post", it)
