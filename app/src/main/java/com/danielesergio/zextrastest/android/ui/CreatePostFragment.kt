@@ -102,6 +102,7 @@ class CreatePostFragment : Fragment() {
                         if(newPostCreate){
                             Snackbar.make(requireView(), "Post created", Snackbar.LENGTH_SHORT)
                                 .show()
+                            findNavController().navigate(R.id.action_CreatePostFragment_to_ViewPostsFragment)
                         }
                     }
                 }
