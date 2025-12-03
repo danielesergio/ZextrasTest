@@ -1,8 +1,7 @@
 package com.danielesergio.zextrastest.domain.post
 
-import com.danielesergio.zextrastest.log.LoggerImpl
 import com.danielesergio.zextrastest.domain.ValidationResult
-import com.danielesergio.zextrastest.domain.post.DataSource
+import com.danielesergio.zextrastest.log.LoggerImpl
 
 class PostRepository(private val dataSource: DataSource){
 
